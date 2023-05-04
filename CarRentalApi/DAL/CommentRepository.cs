@@ -19,7 +19,7 @@ namespace CarRentalApi.DAL
                 return _context.Comments.ToList();
               }catch(Exception ex)
             {
-                return null;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -30,7 +30,7 @@ namespace CarRentalApi.DAL
                 return _context.Comments.Include(comment=>comment.ForCar).Where(comment => comment.ForCar.Id == carId).ToList();
             }catch (Exception ex)
             {
-                return null;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -66,7 +66,7 @@ namespace CarRentalApi.DAL
             catch(Exception ex)
             {
                 Console.WriteLine("Unable to add comment");
-                return null;
+                throw new Exception(ex.Message);
             }
         }
 

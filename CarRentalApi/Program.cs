@@ -30,20 +30,26 @@ namespace CarRentalApi
           .AddSubscriptionType<Subscription>().
           AddInMemorySubscriptions();
 
+            builder.Services.AddErrorFilter<GraphQLErrorFilter>();
+
             builder.Services.AddScoped<UserRepository, UserRepository>();
             builder.Services.AddScoped<CarRepository, CarRepository>();
             builder.Services.AddScoped<BookingRepository, BookingRepository>();
             builder.Services.AddScoped<CommentRepository, CommentRepository>();
 
 
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowLocalhost3000", builder => builder.WithOrigins("http://localhost:3000").AllowAnyMethod()
+                          .AllowAnyHeader()
+                          .AllowCredentials());
+            });
+
+
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            /*  if (app.Environment.IsDevelopment())
-              {
-                  app.UseSwagger();
-                  app.UseSwaggerUI();
-              }*/
+           
 
             if (!app.Environment.IsDevelopment())
             {
@@ -52,6 +58,7 @@ namespace CarRentalApi
 
             app.MapGraphQL();
 
+            app.UseCors("AllowLocalhost3000");
 
             app.UseAuthorization();
 

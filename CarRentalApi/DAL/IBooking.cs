@@ -12,10 +12,6 @@ namespace CarRentalApi.DAL
 
         public List<Booking>? GetBookings(int userId);
 
-
-
-
-
     }
 
 }

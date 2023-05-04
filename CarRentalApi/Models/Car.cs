@@ -31,6 +31,9 @@ namespace CarRentalApi.Models
         public int Rating { get; set; }
 
         [Required]
+        public int KmsDriven { get; set; }
+
+        [Required]
         public double PricePerKm { get; set; }
 
         public string ImgUrl { get; set; }

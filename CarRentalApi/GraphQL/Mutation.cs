@@ -12,10 +12,10 @@ namespace CarRentalApi.GraphQL
             return await  userRepository.CreateUser(email, phoneNumber, password, imgUrl);
         }
 
-        public async Task<Car?> Createcar(string make, string model, string regNumber, string state, string city, string district, string year, int OwnerId, string imgUrl,
+        public async Task<Car?> Createcar(string make, string model, string regNumber, string state, string city, string district, string year, int OwnerId, string imgUrl,int kmsDriven,
             [Service] CarRepository carRepository, [Service]ITopicEventSender eventSender)
         {
-            Car? car= await carRepository.CreateCar(make,model, regNumber, state, city, district, year, OwnerId,imgUrl);
+            Car? car= await carRepository.CreateCar(make,model, regNumber, state, city, district, year, OwnerId,imgUrl,kmsDriven);
 
             if (car != null)
             {

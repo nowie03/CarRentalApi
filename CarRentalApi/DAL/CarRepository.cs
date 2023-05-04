@@ -32,7 +32,7 @@ namespace CarRentalApi.DAL
       
 
 
-        public async Task<Car?> CreateCar(string make,string model,string regNumber, string state, string city, string district, string year, int OwnerId, string imgUrl, int rating = 0, double pricePerKm = 21)
+        public async Task<Car?> CreateCar(string make,string model,string regNumber, string state, string city, string district, string year, int OwnerId, string imgUrl,int kmDriven, int rating = 0, double pricePerKm = 21)
         {
             try
             {
@@ -54,6 +54,7 @@ namespace CarRentalApi.DAL
                     Make=make,
                     Model=model,
                     Owner=user,
+                    KmsDriven=kmDriven,
                     ImgUrl=imgUrl
            
                 };
@@ -66,7 +67,7 @@ namespace CarRentalApi.DAL
             catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return null;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -91,7 +92,7 @@ namespace CarRentalApi.DAL
                 return car;
 
             }
-            catch(Exception ex) { Console.WriteLine(ex.Message);return null; }
+            catch(Exception ex) { Console.WriteLine(ex.Message); throw new Exception(ex.Message); }
         }
 
         public async Task<Car?> Car(int id)
@@ -113,7 +114,7 @@ namespace CarRentalApi.DAL
             catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return null;
+                throw new Exception(ex.Message);
 
             }
         }

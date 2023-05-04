@@ -47,7 +47,7 @@ namespace CarRentalApi.DAL
             }catch(Exception ex)
             {
                 Console.WriteLine(ex.Message+" "+ex.StackTrace);
-                return null;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -69,7 +69,7 @@ namespace CarRentalApi.DAL
             }catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return null;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -91,7 +91,7 @@ namespace CarRentalApi.DAL
             }
             catch(Exception ex) { 
                 Console.WriteLine(ex.Message);
-                return null;
+                throw new Exception(ex.Message);
             }
         }
     }

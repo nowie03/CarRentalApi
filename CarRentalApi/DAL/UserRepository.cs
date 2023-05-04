@@ -16,17 +16,27 @@ namespace CarRentalApi.DAL
         {
             try
             {
-                User? user = await _context.Users.FindAsync(userId);
+                User? user = await _context.Users.Include(user => user.OwnedCars).FirstAsync(user => user.ID == userId);
 
-                if (user == null) {
-                    throw new Exception("Car Owned by cannot be found");
+                List<Car> ownedCars=user.OwnedCars.ToList();
+
+                List<Car>? returnOwnedCars = new();
+
+                foreach(var car in ownedCars)
+                {
+                    Car? carTemp = await _context.Cars.Include(car => car.Owner)
+                    .Include(car => car.Bookings)
+                    .Include(car => car.Comments).FirstAsync(c => c.Id == car.Id);
+
+                    if (carTemp != null) 
+                        returnOwnedCars.Add(carTemp);   
                 }
 
-                return user.OwnedCars.ToList();
+                return user == null ? throw new Exception("Cars Owned by cannot be found") : returnOwnedCars;
             }
-            catch(Exception ex) {
+            catch (Exception ex) {
                 Console.WriteLine(ex.Message);
-                return null;
+                throw new Exception(ex.Message);
 
             }
         }
@@ -52,7 +62,7 @@ namespace CarRentalApi.DAL
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return null;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -66,7 +76,7 @@ namespace CarRentalApi.DAL
             }catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return null;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -81,7 +91,7 @@ namespace CarRentalApi.DAL
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return null;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -97,7 +107,7 @@ namespace CarRentalApi.DAL
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return null;
+                throw new Exception(ex.Message);
             }
 
         }

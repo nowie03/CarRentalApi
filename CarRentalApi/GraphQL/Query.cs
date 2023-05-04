@@ -15,6 +15,8 @@ namespace CarRentalApi.GraphQL
 
         public async Task<Car?> Car(int id, [Service] CarRepository carRepository) => await carRepository.Car(id);
 
+        public async  Task<List<Car>?> OwnedCars(int userId, [Service]UserRepository userRepository)=> await userRepository.CarsOwnedBy(userId);
+
         public List<Booking>? Bookings([Service] BookingRepository bookingRepository)=>bookingRepository.GetBookings();
 
         public List<Booking>? UserBookings(int userId,[Service] BookingRepository bookingRepository) => bookingRepository.GetBookings(userId);
