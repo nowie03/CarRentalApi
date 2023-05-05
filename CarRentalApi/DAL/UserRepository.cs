@@ -1,6 +1,12 @@
 ﻿using CarRentalApi.Data;
 using CarRentalApi.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using System.Data;
 
 namespace CarRentalApi.DAL
 {
@@ -112,6 +118,38 @@ namespace CarRentalApi.DAL
 
         }
 
+        private string _generateToken(User user)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes("your-secret-key-here-32-characters-long");
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                new Claim("userId", user.ID.ToString()),
+                new Claim("email", user.Email)
+            }),
+                Expires = DateTime.UtcNow.AddHours(1),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
 
+        public string? SignIn(string email, string password)
+        {
+            try
+            {
+                User? user = _context.Users.FirstOrDefault(user => user.Email.Equals(email) && user.Password.Equals(password));
+
+
+                return _generateToken(user);
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception("user not found");
+            }
+        }
     }
 }

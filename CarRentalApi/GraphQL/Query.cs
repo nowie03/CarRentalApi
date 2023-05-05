@@ -26,11 +26,7 @@ namespace CarRentalApi.GraphQL
         public List<Comment>? CarComments(int carId,[Service] CommentRepository commentRepository) => commentRepository.Comments(carId);
 
 
-
-
-
-
-
+        public string SignIn(string email, string password, [Service] UserRepository userRepository) => userRepository.SignIn(email, password);
 
 
 

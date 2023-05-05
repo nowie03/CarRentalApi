@@ -14,6 +14,8 @@ namespace CarRentalApi.DAL
 
         public Task<List<Car>?> CarsOwnedBy(int userId);
 
+        public string? SignIn(string email,string password);
+
    
 
     }
