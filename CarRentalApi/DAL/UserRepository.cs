@@ -67,8 +67,17 @@ namespace CarRentalApi.DAL
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                throw new Exception(ex.Message);
+                if (ex.InnerException != null)
+                {
+                    string result = ex.InnerException.Message;
+
+                    int index = result.IndexOf("IX_Users_PhoneNumber");
+                    if (index < 0)
+                        throw new Exception("Email already exists");
+
+                    throw new Exception("Phone number already exists");
+                }
+                throw new Exception("internal error");
             }
         }
 
@@ -140,15 +149,17 @@ namespace CarRentalApi.DAL
         {
             try
             {
-                User? user = _context.Users.FirstOrDefault(user => user.Email.Equals(email) && user.Password.Equals(password));
+                User? user = _context.Users.FirstOrDefault(user => user.Email.Equals(email)) ?? throw new Exception("user not found");
 
+                if(user.Password.Equals(password))
+                    return _generateToken(user);
 
-                return _generateToken(user);
+                throw new Exception("password doesnt match");
             }
             catch (Exception ex)
             {
-
-                throw new Exception("user not found");
+                Console.WriteLine(ex.Message);
+                return new GraphQLException(ex.Message).ToString();
             }
         }
     }

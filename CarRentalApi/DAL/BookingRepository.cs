@@ -55,7 +55,9 @@ namespace CarRentalApi.DAL
         {
             try
             {
-               Booking? bookking=await _context.Bookings.FindAsync(id);
+                Booking? bookking = await _context.Bookings.Include(booking => booking.BookedBy)
+                     .Include(booking => booking.BookedCar)
+                     .FirstOrDefaultAsync(booking => booking.Id == id);
                if (bookking != null)
                 {
                     _context.Bookings.Remove(bookking);

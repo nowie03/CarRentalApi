@@ -55,6 +55,7 @@ namespace CarRentalApi
             {
                 app.UseExceptionHandler("/Error");
             }
+            app.UseWebSockets();
 
             app.MapGraphQL();
 
