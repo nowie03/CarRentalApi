@@ -36,13 +36,9 @@ namespace CarRentalApi.DAL
         {
             try
             {
-                User? user = await _context.Users.FindAsync(OwnerId);
-                if(user == null)
-                {
-                    throw new Exception("Owner not found");
-                }
-
-                var car = new Car()
+               
+                User? user = await _context.Users.FindAsync(OwnerId) ?? throw new Exception("Owner not found");
+                Car car = new ()
                 {
                     RegNumber=regNumber,
                     State=state,
@@ -55,12 +51,15 @@ namespace CarRentalApi.DAL
                     Model=model,
                     Owner=user,
                     KmsDriven=kmDriven,
-                    ImgUrl=imgUrl
-           
+                    ImgUrl=imgUrl,
+                    Comments=new List<Comment>(),
+                    Bookings=new List<Booking>(),
+                    CreatedAt = DateTime.Now,
                 };
 
                 await _context.Cars.AddAsync(car);
                 await _context.SaveChangesAsync();
+                Console.Write("Car added");
 
                 return car;
             }
@@ -80,7 +79,7 @@ namespace CarRentalApi.DAL
                     .FirstAsync(car=>car.Id==id) ?? throw new Exception("car cannot be found");
 
                 List<Booking> bookingsForCar = _context.Bookings.Include(booking => booking.BookedCar)
-                    .Where(booking => booking.BookedCar.Id == id && booking.EndDate.CompareTo(DateTime.Now)<=0 ).ToList();
+                    .Where(booking => booking.BookedCar.Id == id && booking.EndDate.CompareTo(DateTime.Now)>0 ).ToList();
 
                // Console.WriteLine(bookingsForCar.Count + "-------");
 
